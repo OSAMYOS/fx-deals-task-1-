@@ -29,7 +29,7 @@ public class DealController {
         this.validationService = validationService;
     }
 
-    @PostMapping("/deals")
+    @PostMapping("/create")
     public ResponseEntity<String> createDeal(@RequestBody FxDeals deal) {
         BindingResult validationResult = (BindingResult) validationService.validateFxDeal(deal);
 
