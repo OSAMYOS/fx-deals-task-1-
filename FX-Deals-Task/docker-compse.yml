@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  mysqldb:
+    image: mysql
+    restart: always
+    container_name: mysqldb
+    environment:
+      MYSQL_ROOT_PASSWORD: 1258
+      MYSQL_DATABASE: fx_data
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+
+
+  deal:
+    build: .
+    restart: always
+    container_name: fx_deal
+    ports:
+      - "9500:9500"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
