@@ -1,4 +1,4 @@
-package com.example.FXDealsTask.model;
+package com.example.FXDealsTask.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @Table(name="fx_deals", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"deal_unique_id","from_currency", "to_currency", "deal_timestamp", "deal_amount"})
 })
-public class FxDeals {
+public class FxDeal {
 
     @Id
     @Min(value = 1, message = "Id can't be negative")
@@ -39,14 +39,14 @@ public class FxDeals {
     private BigDecimal dealAmount;
 
 
-    public FxDeals(String dealUniqueId, String fromCurrency, String toCurrency, Timestamp dealTimestamp, BigDecimal dealAmount) {
+    public FxDeal(String dealUniqueId, String fromCurrency, String toCurrency, Timestamp dealTimestamp, BigDecimal dealAmount) {
         this.dealUniqueId = dealUniqueId;
         this.fromCurrency = fromCurrency;
         this.toCurrency = toCurrency;
         this.dealTimestamp = dealTimestamp;
         this.dealAmount = dealAmount;
     }
-    public FxDeals() {}
+    public FxDeal() {}
 
     @Override
     public String toString() {
