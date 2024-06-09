@@ -1,22 +1,23 @@
 package com.example.FXDealsTask.service;
 
 import com.example.FXDealsTask.Exceptions.CurrencyNotFoundException;
-import com.example.FXDealsTask.Exceptions.GlobalExceptionHandler;
+import com.example.FXDealsTask.Exceptions.DealNotFoundException;
+import com.example.FXDealsTask.Exceptions.DuplicateDealException;
 import com.example.FXDealsTask.Exceptions.SameCurrencyException;
-import com.example.FXDealsTask.model.FxDeals;
+import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.repository.DealJpaRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class DealServiceImpl implements DealService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DealServiceImpl.class);
     private final DealJpaRepository repository;
 
     @Autowired
@@ -25,45 +26,57 @@ public class DealServiceImpl implements DealService {
     }
 
     @Override
-    public List<FxDeals> findAll() {
-        logger.info("Fetching all deals");
-        return List.of((FxDeals) repository.findAll());
+    public List<FxDeal> findAll() {
+        log.info("Fetching all deals");
+        if (repository.count() == 0) {
+            log.error("No deals found");
+            throw new CurrencyNotFoundException("No deals found");
+        }
+        return repository.findAll();
     }
 
     @Override
-    public Optional<FxDeals> findById(int theId) {
-        logger.info("Fetching deal with id: {}", theId);
+    public Optional<FxDeal> findById(int theId) {
+        log.info("Fetching deal with id: {}", theId);
         if (theId <= 0) {
-            logger.error("Invalid deal id: {}", theId);
-            throw new CurrencyNotFoundException("Invalid deal id: " + theId);
+            log.error("Invalid deal id: {}", theId);
+            throw new DealNotFoundException("Invalid deal id: " + theId);
         }
 
-        Optional<FxDeals> deal=repository.findById(String.valueOf(theId));
+        Optional<FxDeal> deal=repository.findById(theId);
         if (deal.isEmpty()) {
-            logger.error("deal not found: {}", theId);
-            throw new CurrencyNotFoundException("deal not found: " + theId);
+            log.error("deal not found: {}", theId);
+            throw new DealNotFoundException("deal not found: " + theId);
         }
         return deal;
     }
 
     @Override
-    public void save(FxDeals theDeal) {
-        logger.info("Saving deal: {}", theDeal);
+    @Transactional
+    public FxDeal save(FxDeal theDeal) {
+        log.info("Trying to save deal: {}", theDeal);
         if (theDeal == null) {
-            logger.error("Deal cannot be null");
+            log.error("Deal cannot be null");
             throw new IllegalArgumentException("Deal cannot be null");
         }
+
         if (theDeal.getToCurrency().equals(theDeal.getFromCurrency())){
-            logger.error("Deals can't be the same currency");
+            log.error("Deals can't be the same currency");
             throw new SameCurrencyException("Deals can't be the same currency");
         }
-        Optional<FxDeals> deal=findById(Integer.parseInt(theDeal.getDealUniqueId()));
-        if (deal.isPresent()) {
-            repository.save(theDeal);
-            logger.info("Deal saved: {}", theDeal);
+
+        Optional<FxDeal> existingDeal = repository.findById(theDeal.getId());
+        if (existingDeal.isPresent()) {
+            log.error("Deal already exists: {}", theDeal.getId());
+            throw new DuplicateDealException("Deal already exists: " + theDeal.getId());
         }
-        logger.error("deal not found: {}", theDeal.getDealUniqueId());
-        throw new CurrencyNotFoundException("deal not found: "+theDeal.getDealUniqueId());
+
+        repository.save(theDeal);
+        log.info("Deal saved: {}", theDeal);
+
+        return theDeal;
     }
+
+
 
 }

@@ -1,6 +1,6 @@
 package com.example.FXDealsTask.Validation;
 
-import com.example.FXDealsTask.model.FxDeals;
+import com.example.FXDealsTask.model.FxDeal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -17,7 +17,7 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     @Override
-    public Errors validateFxDeal(FxDeals deal) {
+    public Errors validateFxDeal(FxDeal deal) {
         Errors errors = new BeanPropertyBindingResult(deal, "fxDeals");
         fxDealsValidator.validate(deal,  errors);
         return errors;

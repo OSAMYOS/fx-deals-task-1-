@@ -1,6 +1,6 @@
 package com.example.FXDealsTask.Validation;
 
-import com.example.FXDealsTask.model.FxDeals;
+import com.example.FXDealsTask.model.FxDeal;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,25 +9,26 @@ import java.math.BigDecimal;
 
 @Component
 public class FxDealsValidator implements Validator {
+
     @Override
     public boolean supports(Class<?> clazz) {
-        return FxDeals.class.equals(clazz);
+        return FxDeal.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        FxDeals deal = (FxDeals) target;
-
-        if (deal.getDealUniqueId() == null || deal.getDealUniqueId().isEmpty()) {
-            errors.rejectValue("dealUniqueId", "NotNull", "Deal Unique Id is missing.");
-        }
+        FxDeal deal = (FxDeal) target;
 
         if (deal.getFromCurrency() == null || deal.getFromCurrency().isEmpty()) {
-            errors.rejectValue("fromCurrencyIsoCode", "NotNull", "From Currency ISO Code is missing.");
+            errors.rejectValue("fromCurrency", "NotNull", "From Currency ISO Code is missing.");
+        } else if (deal.getFromCurrency().length() != 3) {
+            errors.rejectValue("fromCurrency", "Length", "From Currency ISO Code must be exactly 3 letters.");
         }
 
         if (deal.getToCurrency() == null || deal.getToCurrency().isEmpty()) {
-            errors.rejectValue("toCurrencyIsoCode", "NotNull", "To Currency ISO Code is missing.");
+            errors.rejectValue("toCurrency", "NotNull", "To Currency ISO Code is missing.");
+        } else if (deal.getToCurrency().length() != 3) {
+            errors.rejectValue("toCurrency", "Length", "To Currency ISO Code must be exactly 3 letters.");
         }
 
         if (deal.getDealTimestamp() == null) {
@@ -39,6 +40,6 @@ public class FxDealsValidator implements Validator {
         } else if (deal.getDealAmount().compareTo(BigDecimal.ZERO) <= 0) {
             errors.rejectValue("dealAmount", "Positive", "Deal Amount should be a positive number.");
         }
-
     }
+
 }

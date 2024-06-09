@@ -1,16 +1,16 @@
 package com.example.FXDealsTask.service;
 
-import com.example.FXDealsTask.model.FxDeals;
+import com.example.FXDealsTask.model.FxDeal;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface DealService {
 
-    List<FxDeals> findAll();
+    List<FxDeal> findAll();
 
-    Optional<FxDeals> findById(int theId);
+    Optional<FxDeal> findById(int theId);
 
-    void save(FxDeals theDeal);
+    FxDeal save(FxDeal theDeal);
 
 }

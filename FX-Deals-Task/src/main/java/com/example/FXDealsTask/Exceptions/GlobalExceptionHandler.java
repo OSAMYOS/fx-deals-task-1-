@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,18 +14,31 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    @ExceptionHandler({DuplicateDealException.class, CurrencyNotFoundException.class, SameCurrencyException.class, DealNotFoundException.class})
+    public ResponseEntity<Object> handleExceptions(Exception ex) {
+        log.error("An exception occurred: ", ex);
 
-    @ExceptionHandler(DuplicateDealException.class)
-    public ResponseEntity<Object> handleDealAlreadyProcessed(DuplicateDealException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", ex.getMessage());
 
-        logger.error(ex.getMessage());
-        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+        HttpStatus status;
+        if (ex instanceof DuplicateDealException) {
+            status = HttpStatus.CONFLICT;
+        } else if (ex instanceof CurrencyNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+        } else if (ex instanceof SameCurrencyException) {
+            status = HttpStatus.PAYMENT_REQUIRED;
+        } else if (ex instanceof DealNotFoundException) {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(body, status);
     }
 
 }
