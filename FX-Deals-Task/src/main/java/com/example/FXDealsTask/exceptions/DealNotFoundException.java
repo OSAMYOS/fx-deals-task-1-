@@ -1,4 +1,4 @@
-package com.example.FXDealsTask.Exceptions;
+package com.example.FXDealsTask.exceptions;
 
 public class DealNotFoundException extends RuntimeException {
     public DealNotFoundException(String message) {

@@ -1,4 +1,4 @@
-package com.example.FXDealsTask.Validation;
+package com.example.FXDealsTask.validation;
 
 import com.example.FXDealsTask.model.FxDeal;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,8 @@
 package com.example.FXDealsTask.controller;
 
-import com.example.FXDealsTask.Exceptions.CurrencyNotFoundException;
-import com.example.FXDealsTask.Exceptions.SameCurrencyException;
-import com.example.FXDealsTask.Validation.ValidationService;
+import com.example.FXDealsTask.exceptions.CurrencyNotFoundException;
+import com.example.FXDealsTask.exceptions.SameCurrencyException;
+import com.example.FXDealsTask.validation.ValidationService;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.service.DealService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/deals")

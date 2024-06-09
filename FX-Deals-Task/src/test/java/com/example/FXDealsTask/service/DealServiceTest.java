@@ -1,10 +1,10 @@
 package com.example.FXDealsTask.service;
 
-import com.example.FXDealsTask.Exceptions.CurrencyNotFoundException;
-import com.example.FXDealsTask.Exceptions.DealNotFoundException;
+import com.example.FXDealsTask.exceptions.CurrencyNotFoundException;
+import com.example.FXDealsTask.exceptions.DealNotFoundException;
+import com.example.FXDealsTask.exceptions.DuplicateDealException;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.repository.DealJpaRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -52,13 +52,36 @@ public class DealServiceTest {
 
     @Test
     public void testGetDealByIdWhenNotFound() {
-        // Given
+
         when(repository.findById(1)).thenThrow(DealNotFoundException.class);
-        // When & Then
+
         assertThrows(DealNotFoundException.class, () -> {
             dealService.findById(1);
         });
         verify(repository, times(1)).findById(1);
+    }
+
+    @Test
+    public void save_DuplicateDeal_ShouldThrowDuplicateDealException() {
+
+        FxDeal deal = new FxDeal("USD", "EUR", Timestamp.valueOf("2024-06-09 20:01:21.859"), BigDecimal.valueOf(1000.50));
+        when(repository.findById(deal.getId())).thenReturn(Optional.of(deal));
+
+        assertThrows(DuplicateDealException.class, () -> {
+            dealService.save(deal);
+        });
+        verify(repository, never()).save(any(FxDeal.class));
+    }
+
+    @Test
+    public void findById_InvalidId_ShouldThrowDealNotFoundException() {
+        int id = 999;
+
+        when(repository.findById(String.valueOf(id))).thenReturn(Optional.empty());
+
+        assertThrows(DealNotFoundException.class, () -> {
+            dealService.findById(id);
+        });
     }
 
     @Test(expected = IllegalArgumentException.class)

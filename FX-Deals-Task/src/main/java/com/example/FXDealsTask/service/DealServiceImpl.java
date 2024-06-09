@@ -1,9 +1,9 @@
 package com.example.FXDealsTask.service;
 
-import com.example.FXDealsTask.Exceptions.CurrencyNotFoundException;
-import com.example.FXDealsTask.Exceptions.DealNotFoundException;
-import com.example.FXDealsTask.Exceptions.DuplicateDealException;
-import com.example.FXDealsTask.Exceptions.SameCurrencyException;
+import com.example.FXDealsTask.exceptions.CurrencyNotFoundException;
+import com.example.FXDealsTask.exceptions.DealNotFoundException;
+import com.example.FXDealsTask.exceptions.DuplicateDealException;
+import com.example.FXDealsTask.exceptions.SameCurrencyException;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.repository.DealJpaRepository;
 import lombok.extern.slf4j.Slf4j;

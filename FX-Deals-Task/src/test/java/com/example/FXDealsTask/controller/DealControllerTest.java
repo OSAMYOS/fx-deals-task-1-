@@ -1,7 +1,7 @@
 package com.example.FXDealsTask.controller;
 
-import com.example.FXDealsTask.Exceptions.SameCurrencyException;
-import com.example.FXDealsTask.Validation.ValidationService;
+import com.example.FXDealsTask.exceptions.SameCurrencyException;
+import com.example.FXDealsTask.validation.ValidationService;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.service.DealServiceImpl;
 import org.junit.Test;
