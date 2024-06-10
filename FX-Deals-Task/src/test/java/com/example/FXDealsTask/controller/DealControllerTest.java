@@ -51,7 +51,7 @@ public class DealControllerTest {
 
         when(validationService.validateFxDeal(deal)).thenReturn(new BeanPropertyBindingResult(deal, "fxDeals"));
 
-        when(dealService.save(deal)).thenReturn(deal);  // Correctly mock the save method
+        when(dealService.save(deal)).thenReturn(deal);
 
         ResponseEntity<String> response = dealController.createDeal(deal);
 

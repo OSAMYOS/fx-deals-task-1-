@@ -1,9 +1,6 @@
 package com.example.FXDealsTask.service;
 
-import com.example.FXDealsTask.exceptions.CurrencyNotFoundException;
-import com.example.FXDealsTask.exceptions.DealNotFoundException;
-import com.example.FXDealsTask.exceptions.DuplicateDealException;
-import com.example.FXDealsTask.exceptions.SameCurrencyException;
+import com.example.FXDealsTask.exceptions.*;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.repository.DealJpaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +27,7 @@ public class DealServiceImpl implements DealService {
         log.info("Fetching all deals");
         if (repository.count() == 0) {
             log.error("No deals found");
-            throw new CurrencyNotFoundException("No deals found");
+            throw new DealNotFoundException("No deals found");
         }
         return repository.findAll();
     }
@@ -57,7 +54,7 @@ public class DealServiceImpl implements DealService {
         log.info("Trying to save deal: {}", theDeal);
         if (theDeal == null) {
             log.error("Deal cannot be null");
-            throw new IllegalArgumentException("Deal cannot be null");
+            throw new NullDealException("Deal cannot be null");
         }
 
         if (theDeal.getToCurrency().equals(theDeal.getFromCurrency())){

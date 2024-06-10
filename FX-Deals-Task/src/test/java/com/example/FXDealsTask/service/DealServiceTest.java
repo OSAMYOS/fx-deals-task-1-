@@ -1,8 +1,8 @@
 package com.example.FXDealsTask.service;
 
-import com.example.FXDealsTask.exceptions.CurrencyNotFoundException;
 import com.example.FXDealsTask.exceptions.DealNotFoundException;
 import com.example.FXDealsTask.exceptions.DuplicateDealException;
+import com.example.FXDealsTask.exceptions.NullDealException;
 import com.example.FXDealsTask.model.FxDeal;
 import com.example.FXDealsTask.repository.DealJpaRepository;
 import org.junit.Test;
@@ -84,8 +84,11 @@ public class DealServiceTest {
         });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void save_NullDeal_ShouldThrowException() {
-        dealService.save(null);
+        assertThrows(NullDealException.class, () -> {
+            dealService.save(null);
+        });
     }
+
 }
